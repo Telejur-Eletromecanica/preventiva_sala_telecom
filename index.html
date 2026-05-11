@@ -3,95 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório de Atividades - Telecom</title>
+    <title>Relatório de Atividades</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-4">
+<body class="bg-slate-100 p-4">
 
-    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
+    <div class="max-w-md mx-auto bg-white rounded-2xl shadow-lg overflow-hidden p-6 border border-slate-200">
         <div class="text-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Registro de Atividade</h2>
-            <p class="text-sm text-gray-500">Preencha os dados abaixo</p>
+            <h2 class="text-2xl font-bold text-slate-800">Registro de Atividade</h2>
+            <p class="text-sm text-slate-500">Selecione o site para listar os locais</p>
         </div>
 
         <form id="atividadeForm" class="space-y-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700">Atividade</label>
-                <input type="text" id="atividade" value="Preventiva de Rack e Sala de Telecom" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 bg-gray-50 border" required>
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Local</label>
-                <select id="local" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
-                    <option value="">Selecione o Local...</option>
-                    <optgroup label="JBE (Porto)">
-                        <option value="001B - Escritório ADM">001B - Escritório ADM</option>
-                        <option value="112B - Subestação Principal">112B - Subestação Principal</option>
-                        <option value="631A - Sala de Controle">631A - Sala de Controle</option>
-                        <option value="967B - Torre de Telecom">967B - Torre de Telecom</option>
-                    </optgroup>
-                    <optgroup label="JPO">
-                        <option value="001P - Escritório ADM">001P - Escritório ADM</option>
-                        <option value="410A - Sala de Controle">410A - Sala de Controle</option>
-                        <option value="412P - Sala de Telecom">412P - Sala de Telecom</option>
-                        <option value="S370 - Sala de Telecom">S370 - Sala de Telecom</option>
-                    </optgroup>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Site</label>
+                <select id="site" onchange="atualizarLocais()" class="w-full rounded-lg border-slate-300 shadow-sm p-3 bg-white border focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    <option value="">Selecione o Site</option>
+                    <option value="JBE">JBE</option>
+                    <option value="JPO">JPO</option>
                 </select>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700">Área</label>
-                <input type="text" id="area" value="Utilidade" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Local</label>
+                <select id="local" class="w-full rounded-lg border-slate-300 shadow-sm p-3 bg-white border focus:ring-2 focus:ring-blue-500 outline-none" required disabled>
+                    <option value="">Selecione o Site primeiro</option>
+                </select>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700">Colaboradores (separe por vírgula)</label>
-                <textarea id="colaboradores" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" placeholder="Ex: Antônio, Cezar, Rafael"></textarea>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Atividade</label>
+                <input type="text" id="atividade" value="Preventiva de Rack e Sala de Telecom" class="w-full rounded-lg border-slate-300 shadow-sm p-3 bg-slate-50 border outline-none">
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700">Apoio</label>
-                <input type="text" id="apoio" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Área</label>
+                <input type="text" id="area" value="Utilidade" class="w-full rounded-lg border-slate-300 shadow-sm p-3 border outline-none">
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700">Status</label>
-                <select id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Colaboradores</label>
+                <textarea id="colaboradores" rows="2" class="w-full rounded-lg border-slate-300 shadow-sm p-3 border outline-none" placeholder="Nomes separados por vírgula"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Status</label>
+                <select id="status" class="w-full rounded-lg border-slate-300 shadow-sm p-3 border outline-none">
                     <option value="Concluído">Concluído</option>
                     <option value="Em Andamento">Em Andamento</option>
-                    <option value="Pendente">Pendente</option>
                 </select>
             </div>
 
-            <div class="pt-4 space-y-2">
-                <button type="button" onclick="enviarWhatsApp()" class="w-full bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition flex items-center justify-center gap-2">
-                    <span>Enviar para WhatsApp</span>
-                </button>
-            </div>
+            <button type="button" onclick="enviarWhatsApp()" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl hover:bg-green-700 transition shadow-md flex items-center justify-center gap-2 mt-4">
+                Enviar para WhatsApp
+            </button>
         </form>
     </div>
 
     <script>
-        function enviarWhatsApp() {
-            const atividade = document.getElementById('atividade').value;
-            const local = document.getElementById('local').value;
-            const area = document.getElementById('area').value;
-            const colaboradores = document.getElementById('colaboradores').value.split(',').map(n => n.trim()).join('\n° ');
-            const apoio = document.getElementById('apoio').value;
-            const status = document.getElementById('status').value;
+        const locaisPorSite = {
+            'JBE': [
+                "Escritório ADM", "Escritorio Móvel", "Portaria", "Restaurante", "Ambulatório", 
+                "Brigada Bombeiros", "Subestação Principal", "Prédio CapEx Lagos", 
+                "Laboratório Fisico", "Laboratório Quimico", "Almoxarifado", "Oficina Central",
+                "Oficina Veiculos Leves", "Oficina de Vagões", "Oficina de Caldeiraria",
+                "Manutenção MTUR", "ETA", "ETE", "Prédio do CRAS", "Sala de Telecom da TT",
+                "Posto de Abastecimento", "Empilhadeira", "Sala de Controle", "Planta de Lavagem",
+                "Torre de Telecomunicações", "Subestação da Captação", "Subestação Britagem"
+            ],
+            'JPO': [
+                "Escritório ADM", "Portaria", "Restaurante", "Ambulatório", "Brigada Bombeiros",
+                "Subestação Principal", "Posto de Abastecimento", "Almoxarifado", "Oficina Central",
+                "Oficina MPOR", "ETA", "ETE", "Sala de Controle", "Sala de Telecom Pier",
+                "Carregador de Navios", "Retomadora", "Sala de Telecom", "Empilhadeira",
+                "Viveiro de Mudas", "Torre de Telecomunicações", "Subestação Expedição", "Subestação Virador de Vagões"
+            ]
+        };
 
-            // Formatação da mensagem igual ao seu padrão
-            let mensagem = `*ATIVIDADE*\n${atividade}\n\n`;
-            mensagem += `*° LOCAL*\n${local}\n\n`;
-            mensagem += `*° ÁREA*\n${area}\n\n`;
-            mensagem += `*° COLABORADORES*\n° ${colaboradores}\n\n`;
-            mensagem += `*° APOIO*\n${apoio}\n\n`;
-            mensagem += `*° STATUS*\n${status}`;
-
-            const encodedText = encodeURIComponent(mensagem);
-            const whatsappUrl = `https://wa.me/?text=${encodedText}`;
+        function atualizarLocais() {
+            const siteSel = document.getElementById('site').value;
+            const localDrop = document.getElementById('local');
             
-            window.open(whatsappUrl, '_blank');
+            localDrop.innerHTML = '<option value="">Selecione o Local...</option>';
+            
+            if (siteSel && locaisPorSite[siteSel]) {
+                localDrop.disabled = false;
+                locaisPorSite[siteSel].forEach(local => {
+                    let option = document.createElement('option');
+                    option.value = local;
+                    option.text = local;
+                    localDrop.appendChild(option);
+                });
+            } else {
+                localDrop.disabled = true;
+            }
+        }
+
+        function enviarWhatsApp() {
+            const dados = {
+                atividade: document.getElementById('atividade').value,
+                site: document.getElementById('site').value,
+                local: document.getElementById('local').value,
+                area: document.getElementById('area').value,
+                colaboradores: document.getElementById('colaboradores').value.split(',').map(n => n.trim()).join('\n° '),
+                status: document.getElementById('status').value
+            };
+
+            let msg = `*ATIVIDADE*\n${dados.atividade}\n\n`;
+            msg += `*° SITE*\n${dados.site}\n\n`;
+            msg += `*° LOCAL*\n${dados.local}\n\n`;
+            msg += `*° ÁREA*\n${dados.area}\n\n`;
+            msg += `*° COLABORADORES*\n° ${dados.colaboradores}\n\n`;
+            msg += `*° STATUS*\n${dados.status}`;
+
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
         }
     </script>
 </body>
