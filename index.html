@@ -3,18 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório de Atividades</title>
+    <title>Relatório de Atividades - Telecom</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+    </style>
 </head>
 <body class="bg-slate-100 p-4">
 
-    <div class="max-w-md mx-auto bg-white rounded-2xl shadow-lg overflow-hidden p-6 border border-slate-200">
-        <div class="text-center mb-6">
-            <h2 class="text-2xl font-bold text-slate-800">Registro de Atividade</h2>
-            <p class="text-sm text-slate-500">Selecione o site para listar os locais</p>
+    <div class="max-w-md mx-auto bg-white rounded-2xl shadow-lg overflow-hidden border border-slate-200">
+        <div class="bg-slate-800 p-4 flex justify-between items-center">
+            <h2 class="text-white font-bold">Registro de Atividade</h2>
+            <button onclick="abrirModal()" class="text-slate-400 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </button>
         </div>
 
-        <form id="atividadeForm" class="space-y-4">
+        <form id="atividadeForm" class="p-6 space-y-4">
             <div>
                 <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Site</label>
                 <select id="site" onchange="atualizarLocais()" class="w-full rounded-lg border-slate-300 shadow-sm p-3 bg-white border focus:ring-2 focus:ring-blue-500 outline-none" required>
@@ -32,18 +40,14 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Atividade</label>
-                <input type="text" id="atividade" value="Preventiva de Rack e Sala de Telecom" class="w-full rounded-lg border-slate-300 shadow-sm p-3 bg-slate-50 border outline-none">
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Equipe Executante</label>
+                <div id="listaColaboradores" class="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto p-3 border rounded-lg bg-slate-50 text-sm">
+                    </div>
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Área</label>
-                <input type="text" id="area" value="Utilidade" class="w-full rounded-lg border-slate-300 shadow-sm p-3 border outline-none">
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Colaboradores</label>
-                <textarea id="colaboradores" rows="2" class="w-full rounded-lg border-slate-300 shadow-sm p-3 border outline-none" placeholder="Nomes separados por vírgula"></textarea>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Apoio</label>
+                <input type="text" id="apoio" class="w-full rounded-lg border-slate-300 shadow-sm p-3 border outline-none" placeholder="Ex: Joelcinei">
             </div>
 
             <div>
@@ -60,64 +64,121 @@
         </form>
     </div>
 
+    <div id="modalAdm" class="modal flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden">
+            <div class="bg-slate-200 p-4 flex justify-between items-center">
+                <span class="font-bold text-slate-700">Gerenciar Colaboradores</span>
+                <button onclick="fecharModal()" class="text-slate-500 text-xl font-bold">&times;</button>
+            </div>
+            <div class="p-4 space-y-4">
+                <div class="flex gap-2">
+                    <input type="text" id="novoNome" placeholder="Novo nome..." class="flex-1 border rounded-lg p-2 outline-none">
+                    <button onclick="adicionarColaborador()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold">+</button>
+                </div>
+                <div id="listaEdicao" class="max-h-60 overflow-y-auto space-y-2 border-t pt-2">
+                    </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Dados Iniciais (Caso o LocalStorage esteja vazio)
+        const colabIniciais = [
+            "Adriano Nascimento", "Cezar Prado", "Deivison Aleidson", "Deivison Barros", 
+            "Edenildo Rodrigues", "Ezequiel", "Francivaldo Costa", "Jean Soares", 
+            "Jeiel Lobato", "Joelcinei Guimarães", "José Antônio", "Juenisson Belem", 
+            "Lucas Santos", "Matheus Costa", "Rafael Gonçalves", "Reginaldo Pereira", "Welyton Pereira"
+        ];
+
+        let colaboradores = JSON.parse(localStorage.getItem('equipeTelecom')) || colabIniciais;
+
         const locaisPorSite = {
-            'JBE': [
-                "Escritório ADM", "Escritorio Móvel", "Portaria", "Restaurante", "Ambulatório", 
-                "Brigada Bombeiros", "Subestação Principal", "Prédio CapEx Lagos", 
-                "Laboratório Fisico", "Laboratório Quimico", "Almoxarifado", "Oficina Central",
-                "Oficina Veiculos Leves", "Oficina de Vagões", "Oficina de Caldeiraria",
-                "Manutenção MTUR", "ETA", "ETE", "Prédio do CRAS", "Sala de Telecom da TT",
-                "Posto de Abastecimento", "Empilhadeira", "Sala de Controle", "Planta de Lavagem",
-                "Torre de Telecomunicações", "Subestação da Captação", "Subestação Britagem"
-            ],
-            'JPO': [
-                "Escritório ADM", "Portaria", "Restaurante", "Ambulatório", "Brigada Bombeiros",
-                "Subestação Principal", "Posto de Abastecimento", "Almoxarifado", "Oficina Central",
-                "Oficina MPOR", "ETA", "ETE", "Sala de Controle", "Sala de Telecom Pier",
-                "Carregador de Navios", "Retomadora", "Sala de Telecom", "Empilhadeira",
-                "Viveiro de Mudas", "Torre de Telecomunicações", "Subestação Expedição", "Subestação Virador de Vagões"
-            ]
+            'JBE': ["Escritório ADM", "Escritorio Móvel", "Portaria", "Restaurante", "Ambulatório", "Brigada Bombeiros", "Subestação Principal", "Prédio CapEx Lagos", "Laboratório Fisico", "Laboratório Quimico", "Almoxarifado", "Oficina Central", "Oficina Veiculos Leves", "Oficina de Vagões", "Oficina de Caldeiraria", "Manutenção MTUR", "ETA", "ETE", "Prédio do CRAS", "Sala de Telecom da TT", "Posto de Abastecimento", "Empilhadeira", "Sala de Controle", "Planta de Lavagem", "Torre de Telecomunicações", "Subestação da Captação", "Subestação Britagem"],
+            'JPO': ["Escritório ADM", "Portaria", "Restaurante", "Ambulatório", "Brigada Bombeiros", "Subestação Principal", "Posto de Abastecimento", "Almoxarifado", "Oficina Central", "Oficina MPOR", "ETA", "ETE", "Sala de Controle", "Sala de Telecom Pier", "Carregador de Navios", "Retomadora", "Sala de Telecom", "Empilhadeira", "Viveiro de Mudas", "Torre de Telecomunicações", "Subestação Expedição", "Subestação Virador de Vagões"]
         };
+
+        function renderizarColaboradores() {
+            const divForm = document.getElementById('listaColaboradores');
+            const divEdicao = document.getElementById('listaEdicao');
+            
+            divForm.innerHTML = '';
+            divEdicao.innerHTML = '';
+
+            colaboradores.sort().forEach((nome, index) => {
+                // Para o formulário
+                divForm.innerHTML += `
+                    <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-200 rounded">
+                        <input type="checkbox" name="colab" value="${nome}" class="w-4 h-4 text-blue-600 rounded border-slate-300">
+                        <span class="text-slate-700">${nome}</span>
+                    </label>`;
+
+                // Para a tela ADM (exclusão)
+                divEdicao.innerHTML += `
+                    <div class="flex justify-between items-center p-2 bg-slate-50 rounded border">
+                        <span class="text-sm">${nome}</span>
+                        <button onclick="removerColaborador(${index})" class="text-red-500 font-bold px-2">Remover</button>
+                    </div>`;
+            });
+            localStorage.setItem('equipeTelecom', JSON.stringify(colaboradores));
+        }
+
+        function adicionarColaborador() {
+            const input = document.getElementById('novoNome');
+            if (input.value.trim() !== "") {
+                colaboradores.push(input.value.trim());
+                input.value = "";
+                renderizarColaboradores();
+            }
+        }
+
+        function removerColaborador(index) {
+            if(confirm("Deseja remover este colaborador da lista?")) {
+                colaboradores.splice(index, 1);
+                renderizarColaboradores();
+            }
+        }
 
         function atualizarLocais() {
             const siteSel = document.getElementById('site').value;
             const localDrop = document.getElementById('local');
-            
             localDrop.innerHTML = '<option value="">Selecione o Local...</option>';
-            
-            if (siteSel && locaisPorSite[siteSel]) {
+            if (siteSel) {
                 localDrop.disabled = false;
-                locaisPorSite[siteSel].forEach(local => {
-                    let option = document.createElement('option');
-                    option.value = local;
-                    option.text = local;
-                    localDrop.appendChild(option);
+                locaisPorSite[siteSel].forEach(l => {
+                    let opt = document.createElement('option');
+                    opt.value = l; opt.text = l;
+                    localDrop.appendChild(opt);
                 });
-            } else {
-                localDrop.disabled = true;
-            }
+            } else { localDrop.disabled = true; }
         }
 
         function enviarWhatsApp() {
-            const dados = {
-                atividade: document.getElementById('atividade').value,
-                site: document.getElementById('site').value,
-                local: document.getElementById('local').value,
-                area: document.getElementById('area').value,
-                colaboradores: document.getElementById('colaboradores').value.split(',').map(n => n.trim()).join('\n° '),
-                status: document.getElementById('status').value
-            };
+            const selecionados = Array.from(document.querySelectorAll('input[name="colab"]:checked')).map(cb => cb.value);
+            const site = document.getElementById('site').value;
+            const local = document.getElementById('local').value;
 
-            let msg = `*ATIVIDADE*\n${dados.atividade}\n\n`;
-            msg += `*° SITE*\n${dados.site}\n\n`;
-            msg += `*° LOCAL*\n${dados.local}\n\n`;
-            msg += `*° ÁREA*\n${dados.area}\n\n`;
-            msg += `*° COLABORADORES*\n° ${dados.colaboradores}\n\n`;
-            msg += `*° STATUS*\n${dados.status}`;
+            if(!site || !local || selecionados.length === 0) {
+                alert("Preencha Site, Local e selecione a equipe.");
+                return;
+            }
+
+            let msg = `*ATIVIDADE*\nPreventiva de Rack e Sala de Telecom\n\n`;
+            msg += `*° SITE*\n${site}\n\n`;
+            msg += `*° LOCAL*\n${local}\n\n`;
+            msg += `*° ÁREA*\n${document.getElementById('area')?.value || 'Utilidade'}\n\n`;
+            msg += `*° COLABORADORES*\n° ${selecionados.join('\n° ')}\n\n`;
+            msg += `*° APOIO*\n${document.getElementById('apoio').value || 'Nenhum'}\n\n`;
+            msg += `*° STATUS*\n${document.getElementById('status').value}`;
 
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
         }
+
+        // Funções do Modal
+        function abrirModal() { document.getElementById('modalAdm').style.display = 'flex'; }
+        function fecharModal() { document.getElementById('modalAdm').style.display = 'none'; }
+
+        // Início
+        renderizarColaboradores();
     </script>
 </body>
 </html>
