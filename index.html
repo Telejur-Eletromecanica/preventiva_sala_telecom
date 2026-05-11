@@ -1,1 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Atividades - Telecom</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4">
 
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Registro de Atividade</h2>
+            <p class="text-sm text-gray-500">Preencha os dados abaixo</p>
+        </div>
+
+        <form id="atividadeForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Atividade</label>
+                <input type="text" id="atividade" value="Preventiva de Rack e Sala de Telecom" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 bg-gray-50 border" required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Local</label>
+                <select id="local" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                    <option value="">Selecione o Local...</option>
+                    <optgroup label="JBE (Porto)">
+                        <option value="001B - Escritório ADM">001B - Escritório ADM</option>
+                        <option value="112B - Subestação Principal">112B - Subestação Principal</option>
+                        <option value="631A - Sala de Controle">631A - Sala de Controle</option>
+                        <option value="967B - Torre de Telecom">967B - Torre de Telecom</option>
+                    </optgroup>
+                    <optgroup label="JPO">
+                        <option value="001P - Escritório ADM">001P - Escritório ADM</option>
+                        <option value="410A - Sala de Controle">410A - Sala de Controle</option>
+                        <option value="412P - Sala de Telecom">412P - Sala de Telecom</option>
+                        <option value="S370 - Sala de Telecom">S370 - Sala de Telecom</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Área</label>
+                <input type="text" id="area" value="Utilidade" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Colaboradores (separe por vírgula)</label>
+                <textarea id="colaboradores" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" placeholder="Ex: Antônio, Cezar, Rafael"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Apoio</label>
+                <input type="text" id="apoio" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Status</label>
+                <select id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                    <option value="Concluído">Concluído</option>
+                    <option value="Em Andamento">Em Andamento</option>
+                    <option value="Pendente">Pendente</option>
+                </select>
+            </div>
+
+            <div class="pt-4 space-y-2">
+                <button type="button" onclick="enviarWhatsApp()" class="w-full bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition flex items-center justify-center gap-2">
+                    <span>Enviar para WhatsApp</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function enviarWhatsApp() {
+            const atividade = document.getElementById('atividade').value;
+            const local = document.getElementById('local').value;
+            const area = document.getElementById('area').value;
+            const colaboradores = document.getElementById('colaboradores').value.split(',').map(n => n.trim()).join('\n° ');
+            const apoio = document.getElementById('apoio').value;
+            const status = document.getElementById('status').value;
+
+            // Formatação da mensagem igual ao seu padrão
+            let mensagem = `*ATIVIDADE*\n${atividade}\n\n`;
+            mensagem += `*° LOCAL*\n${local}\n\n`;
+            mensagem += `*° ÁREA*\n${area}\n\n`;
+            mensagem += `*° COLABORADORES*\n° ${colaboradores}\n\n`;
+            mensagem += `*° APOIO*\n${apoio}\n\n`;
+            mensagem += `*° STATUS*\n${status}`;
+
+            const encodedText = encodeURIComponent(mensagem);
+            const whatsappUrl = `https://wa.me/?text=${encodedText}`;
+            
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
