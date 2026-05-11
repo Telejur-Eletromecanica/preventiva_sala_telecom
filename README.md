@@ -1,0 +1,1 @@
+# preventiva_sala_telecom
