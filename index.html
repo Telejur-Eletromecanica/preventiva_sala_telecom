@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório de Atividades - Telecom</title>
+    <title>Preventiva Sala de Telecom</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
@@ -16,7 +16,7 @@
     <div class="max-w-md mx-auto bg-white rounded-2xl shadow-lg overflow-hidden border border-slate-200">
         <div class="bg-slate-800 p-4 flex justify-between items-center text-white">
             <div>
-                <h2 class="font-bold text-lg">Registro de Atividade</h2>
+                <h2 class="font-bold text-lg uppercase tracking-tight">PREVENTIVA SALA DE TELECOM</h2>
                 <p id="displayData" class="text-xs text-slate-400"></p>
             </div>
             <button onclick="abrirModal()" class="text-slate-400 hover:text-white p-2">
@@ -40,7 +40,7 @@
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Site</label>
-                <select id="site" onchange="atualizarLocais()" class="w-full rounded border p-2 bg-white text-sm outline-none">
+                <select id="site" onchange="atualizarLocais()" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400">
                     <option value="">Selecione o Site</option>
                     <option value="JBE">JBE</option>
                     <option value="JPO">JPO</option>
@@ -49,21 +49,23 @@
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Local</label>
-                <select id="local" class="w-full rounded border p-2 bg-white text-sm outline-none" disabled>
+                <select id="local" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400" disabled>
                     <option value="">Selecione o Site primeiro</option>
                 </select>
             </div>
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Colaborador</label>
-                <select id="executante" class="w-full rounded border p-2 bg-white text-sm outline-none">
-                    </select>
+                <select id="executante" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400">
+                    <option value="">Selecione o Colaborador</option>
+                </select>
             </div>
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Apoio</label>
-                <select id="apoio" class="w-full rounded border p-2 bg-white text-sm outline-none">
-                    </select>
+                <select id="apoio" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400">
+                    <option value="">Selecione o Apoio (opcional)</option>
+                </select>
             </div>
 
             <div>
@@ -80,7 +82,7 @@
         </form>
     </div>
 
-    <div id="modalAdm" class="modal flex items-center justify-center p-4">
+    <div id="modalAdm" class="modal items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="bg-slate-200 p-4 flex justify-between items-center">
                 <span class="font-bold text-slate-700 uppercase text-xs tracking-widest">Painel Administrativo</span>
@@ -116,13 +118,11 @@
     </div>
 
     <script>
-        // Dados de Locais (Imagens enviadas)
         const locaisData = {
             'JBE': ["001B - Escritório ADM", "001B - Escritorio Móvel", "002B - Portaria", "003B - Restaurante", "004B - Ambulatório", "006B - Brigada Bombeiros", "112B - Subestação Principal", "114B - Prédio CapEx Lagos", "146B - Laboratório Fisico", "146B - Laboratório Quimico", "147B - Almoxarifado", "148A - Oficina Central", "148C - Oficina Veiculos Leves", "148F - Oficina de Vagões", "148G - Oficina de Caldeiraria", "149B - Manutenção MTUR", "370B - ETA", "373B - ETE", "378B - Prédio do CRAS", "611B - Sala de Telecom da TT", "613B - Posto de Abastecimento", "621B - Empilhadeira", "631A - Sala de Controle", "631B - Planta de Lavagem", "641B - Empilhadeira", "641B - Sala de Telecom da TT", "642B - Sala de Preparação de Amostras", "661B - Escritório da Lagoa LE", "967B - Torre de Telecomunicações", "S372 - Subestação da Captação", "S611 - Subestação Britagem", "S621 - Subestação Pilha Britados", "S631 - Subestação Predio Lavagem", "S641 - Subestação Pilha Lavados", "S651 - Subestação Distr. Água", "S661 - Subestação da Lagoa"],
             'JPO': ["001P - Escritório ADM", "002P - Portaria", "003P - Restaurante", "004P - Ambulatório", "006P - Brigada Bombeiros", "112P - Subestação Principal", "126P - Posto de Abastecimento", "147P - Almoxarifado", "148P - Oficina Central", "148P - Oficina MPOR", "370P - ETA", "373P - ETE", "410A - Sala de Controle", "410P - Sala de Telecom Pier", "412P - Carregador de Navios", "412P - Retomadora", "412P - Sala de Telecom", "415P - Empilhadeira", "415P - Sala de Telecom", "602P - Viveiro de Mudas", "967P - Torre de Telecomunicações", "S370 - Sala de Telecom", "S412 - Subestação Expedição", "S415 - Subestação Estocagem", "S481 - Subestação Virador de Vagões"]
         };
 
-        // Listas Iniciais
         const colabBase = ["Adriano Nascimento", "Cezar Prado", "Deivison Aleidson", "Deivison Barros", "Edenildo Rodrigues", "Ezequiel", "Francivaldo Costa", "Jean Soares", "Jeiel Lobato", "Joelcinei Guimarães", "José Antônio", "Juenisson Belem", "Lucas Santos", "Matheus Costa", "Rafael Gonçalves", "Reginaldo Pereira", "Welyton Pereira"];
         const apoioBase = ["Joelcinei", "Francivaldo", "Adriano Nascimento", "Ezequiel", "Reginaldo"];
 
