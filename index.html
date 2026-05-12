@@ -5,11 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatório de Atividades - Telecom</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-        .custom-scroll::-webkit-scrollbar { width: 5px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    </style>
 </head>
 <body class="bg-slate-100 p-2 sm:p-4 font-sans">
 
@@ -19,8 +14,8 @@
                 <h2 class="font-bold text-lg">Registro de Atividade</h2>
                 <p id="displayData" class="text-xs text-slate-400"></p>
             </div>
-            <button onclick="abrirModal()" class="text-slate-400 hover:text-white p-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <button onclick="abrirModal()" class="text-slate-500 hover:text-white p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 </svg>
             </button>
@@ -29,18 +24,18 @@
         <form id="atividadeForm" class="p-5 space-y-4">
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Data</label>
-                    <input type="date" id="dataAtividade" class="w-full rounded-lg border-slate-300 shadow-sm p-2 bg-slate-50 border outline-none text-sm">
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase">Data</label>
+                    <input type="date" id="dataAtividade" class="w-full rounded border-slate-300 p-2 bg-slate-50 text-sm outline-none">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Hora</label>
-                    <input type="time" id="horaAtividade" class="w-full rounded-lg border-slate-300 shadow-sm p-2 bg-slate-50 border outline-none text-sm">
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase">Hora</label>
+                    <input type="time" id="horaAtividade" class="w-full rounded border-slate-300 p-2 bg-slate-50 text-sm outline-none">
                 </div>
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Site</label>
-                <select id="site" onchange="atualizarLocais()" class="w-full rounded-lg border-slate-300 shadow-sm p-3 bg-white border focus:ring-2 focus:ring-blue-500 outline-none text-sm" required>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase">Site</label>
+                <select id="site" onchange="atualizarLocais()" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400">
                     <option value="">Selecione o Site</option>
                     <option value="JBE">JBE</option>
                     <option value="JPO">JPO</option>
@@ -48,224 +43,164 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Local</label>
-                <select id="local" class="w-full rounded-lg border-slate-300 shadow-sm p-3 bg-white border focus:ring-2 focus:ring-blue-500 outline-none text-sm" required disabled>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase">Local</label>
+                <select id="local" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400" disabled>
                     <option value="">Selecione o Site primeiro</option>
                 </select>
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Equipe Executante</label>
-                <div id="listaExecutantes" class="custom-scroll grid grid-cols-1 gap-1 max-h-32 overflow-y-auto p-3 border rounded-lg bg-slate-50 text-sm"></div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase">Colaborador</label>
+                <select id="executante" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400">
+                    <option value="">Selecione o Colaborador</option>
+                    </select>
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Equipe de Apoio</label>
-                <div id="listaApoio" class="custom-scroll grid grid-cols-1 gap-1 max-h-32 overflow-y-auto p-3 border rounded-lg bg-slate-50 text-sm"></div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase">Apoio</label>
+                <select id="apoio" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400">
+                    <option value="">Selecione o Apoio (opcional)</option>
+                    </select>
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Status</label>
-                <select id="status" class="w-full rounded-lg border-slate-300 shadow-sm p-3 border outline-none text-sm font-bold text-blue-600">
+                <label class="block text-[10px] font-bold text-slate-500 uppercase">Status</label>
+                <select id="status" class="w-full rounded border p-2 bg-white text-sm font-bold text-blue-600 outline-none">
                     <option value="Concluído">✅ Concluído</option>
                     <option value="Em Andamento">⏳ Em Andamento</option>
                 </select>
             </div>
 
-            <button type="button" onclick="enviarWhatsApp()" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl hover:bg-green-700 transition shadow-md flex items-center justify-center gap-2 mt-4 active:scale-95">
+            <button type="button" onclick="enviarWhatsApp()" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl hover:bg-green-700 transition shadow-md active:scale-95">
                 ENVIAR PARA WHATSAPP
             </button>
         </form>
     </div>
 
-    <div id="modalAdm" class="modal flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
-            <div class="bg-slate-200 p-4 flex justify-between items-center shrink-0">
-                <span class="font-bold text-slate-700 uppercase text-sm tracking-widest">Painel ADM</span>
-                <button onclick="fecharModal()" class="text-slate-500 text-3xl leading-none">&times;</button>
+    <div id="modalAdm" style="display: none;" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-xs">
+            <h3 class="font-bold mb-4">Gerenciar Nomes</h3>
+            <div class="flex gap-2 mb-4">
+                <input type="text" id="novoNome" placeholder="Nome..." class="border rounded p-1 text-sm flex-1">
+                <button onclick="adicionarNome()" class="bg-blue-600 text-white px-2 rounded">+</button>
             </div>
-            
-            <div class="p-4 space-y-6 overflow-y-auto custom-scroll">
-                
-                <section>
-                    <h3 class="text-xs font-black text-orange-600 uppercase mb-2">Gerenciar Locais</h3>
-                    <div class="space-y-2 mb-2">
-                        <select id="siteAdmLocal" class="w-full border rounded p-2 text-sm outline-none">
-                            <option value="JBE">Site JBE</option>
-                            <option value="JPO">Site JPO</option>
-                        </select>
-                        <div class="flex gap-2">
-                            <input type="text" id="novoLocal" placeholder="Nome do Local..." class="flex-1 border rounded p-2 text-sm outline-none">
-                            <button onclick="adicionarLocal()" class="bg-orange-600 text-white px-4 py-1 rounded font-bold">+</button>
-                        </div>
-                    </div>
-                    <div id="admListaLocais" class="space-y-1 text-xs"></div>
-                </section>
-
-                <hr>
-
-                <section>
-                    <h3 class="text-xs font-black text-blue-600 uppercase mb-2">Gerenciar Executantes</h3>
-                    <div class="flex gap-2 mb-2">
-                        <input type="text" id="novoExec" placeholder="Nome..." class="flex-1 border rounded p-2 text-sm outline-none">
-                        <button onclick="adicionarPessoa('exec')" class="bg-blue-600 text-white px-4 py-1 rounded font-bold">+</button>
-                    </div>
-                    <div id="admListaExec" class="space-y-1 text-xs"></div>
-                </section>
-
-                <hr>
-
-                <section>
-                    <h3 class="text-xs font-black text-green-600 uppercase mb-2">Gerenciar Apoio</h3>
-                    <div class="flex gap-2 mb-2">
-                        <input type="text" id="novoApoio" placeholder="Nome..." class="flex-1 border rounded p-2 text-sm outline-none">
-                        <button onclick="adicionarPessoa('apoio')" class="bg-green-600 text-white px-4 py-1 rounded font-bold">+</button>
-                    </div>
-                    <div id="admListaApoio" class="space-y-1 text-xs"></div>
-                </section>
-            </div>
+            <div id="listaNomesAdm" class="max-h-40 overflow-y-auto text-sm space-y-1"></div>
+            <button onclick="fecharModal()" class="mt-4 w-full bg-slate-200 py-2 rounded">Fechar</button>
         </div>
     </div>
 
     <script>
-        // Dados Iniciais
-        const iniciaisLocais = {
-            'JBE': ["Escritório ADM", "Portaria", "Restaurante", "Subestação Principal", "Oficina Central", "ETA", "Sala de Controle", "Torre de Telecomunicações"],
-            'JPO': ["Escritório ADM", "Portaria", "Subestação Principal", "Oficina MPOR", "Sala de Controle", "Sala de Telecom Pier", "Sala de Telecom", "Torre de Telecomunicações"]
+        // LISTA DE LOCAIS EXATAMENTE COMO NA IMAGEM
+        const locaisData = {
+            'JBE': [
+                "001B - Escritório ADM", "001B - Escritorio Móvel", "002B - Portaria", "003B - Restaurante", "004B - Ambulatório",
+                "006B - Brigada Bombeiros", "112B - Subestação Principal", "114B - Prédio CapEx Lagos", "146B - Laboratório Fisico",
+                "146B - Laboratório Quimico", "147B - Almoxarifado", "148A - Oficina Central", "148C - Oficina Veiculos Leves",
+                "148F - Oficina de Vagões", "148G - Oficina de Caldeiraria", "149B - Manutenção MTUR", "370B - ETA", "373B - ETE",
+                "378B - Prédio do CRAS", "611B - Sala de Telecom da TT", "613B - Posto de Abastecimento", "621B - Empilhadeira",
+                "631A - Sala de Controle", "631B - Planta de Lavagem", "641B - Empilhadeira", "641B - Sala de Telecom da TT",
+                "642B - Sala de Preparação de Amostras", "661B - Escritório da Lagoa LE", "967B - Torre de Telecomunicações",
+                "S372 - Subestação da Captação", "S611 - Subestação Britagem", "S621 - Subestação Pilha Britados",
+                "S631 - Subestação Predio Lavagem", "S641 - Subestação Pilha Lavados", "S651 - Subestação Distr. Água",
+                "S661 - Subestação da Lagoa"
+            ],
+            'JPO': [
+                "001P - Escritório ADM", "002P - Portaria", "003P - Restaurante", "004P - Ambulatório", "006P - Brigada Bombeiros",
+                "112P - Subestação Principal", "126P - Posto de Abastecimento", "147P - Almoxarifado", "148P - Oficina Central",
+                "148P - Oficina MPOR", "370P - ETA", "373P - ETE", "410A - Sala de Controle", "410P - Sala de Telecom Pier",
+                "412P - Carregador de Navios", "412P - Retomadora", "412P - Sala de Telecom", "415P - Empilhadeira",
+                "415P - Sala de Telecom", "602P - Viveiro de Mudas", "967P - Torre de Telecomunicações", "S370 - Sala de Telecom",
+                "S412 - Subestação Expedição", "S415 - Subestação Estocagem", "S481 - Subestação Virador de Vagões"
+            ]
         };
-        const iniciaisExec = ["Adriano Nascimento", "Cezar Prado", "Deivison Aleidson", "Deivison Barros", "Edenildo Rodrigues", "Ezequiel", "Francivaldo Costa", "Jean Soares", "Jeiel Lobato", "Joelcinei Guimarães", "José Antônio", "Juenisson Belem", "Lucas Santos", "Matheus Costa", "Rafael Gonçalves", "Reginaldo Pereira", "Welyton Pereira"];
-        const iniciaisApoio = ["Joelcinei", "Francivaldo", "Adriano Nascimento", "Ezequiel", "Reginaldo"];
 
-        let executantes = JSON.parse(localStorage.getItem('equipeExec')) || iniciaisExec;
-        let apoios = JSON.parse(localStorage.getItem('equipeApoio')) || iniciaisApoio;
-        let locaisDb = JSON.parse(localStorage.getItem('locaisTelecom')) || iniciaisLocais;
+        const nomesBase = ["Adriano Nascimento", "Cezar Prado", "Deivison Aleidson", "Deivison Barros", "Edenildo Rodrigues", "Ezequiel", "Francivaldo Costa", "Jean Soares", "Jeiel Lobato", "Joelcinei Guimarães", "José Antônio", "Juenisson Belem", "Lucas Santos", "Matheus Costa", "Rafael Gonçalves", "Reginaldo Pereira", "Welyton Pereira"];
+        
+        let nomesEquipe = JSON.parse(localStorage.getItem('nomesTelecom')) || nomesBase;
 
-        function renderizarTudo() {
-            // Renderiza Executantes
-            const fExec = document.getElementById('listaExecutantes');
-            const aExec = document.getElementById('admListaExec');
-            fExec.innerHTML = ''; aExec.innerHTML = '';
-            executantes.sort().forEach((n, i) => {
-                fExec.innerHTML += `<label class="flex items-center space-x-2 p-1 border-b border-slate-100 last:border-0"><input type="checkbox" name="execCheck" value="${n}" class="w-4 h-4 text-blue-600 rounded"><span>${n}</span></label>`;
-                aExec.innerHTML += `<div class="flex justify-between p-1 bg-slate-50 border rounded items-center"><span>${n}</span><button onclick="removerPessoa('exec', ${i})" class="text-red-500 font-bold p-1 italic text-[10px]">REMOVER</button></div>`;
-            });
-
-            // Renderiza Apoios
-            const fApoio = document.getElementById('listaApoio');
-            const aApoio = document.getElementById('admListaApoio');
-            fApoio.innerHTML = ''; aApoio.innerHTML = '';
-            apoios.sort().forEach((n, i) => {
-                fApoio.innerHTML += `<label class="flex items-center space-x-2 p-1 border-b border-slate-100 last:border-0"><input type="checkbox" name="apoioCheck" value="${n}" class="w-4 h-4 text-green-600 rounded"><span>${n}</span></label>`;
-                aApoio.innerHTML += `<div class="flex justify-between p-1 bg-slate-50 border rounded items-center"><span>${n}</span><button onclick="removerPessoa('apoio', ${i})" class="text-red-500 font-bold p-1 italic text-[10px]">REMOVER</button></div>`;
-            });
-
-            // Renderiza Lista ADM de Locais (baseado no site selecionado no ADM)
-            renderizarListaAdmLocais();
-
-            localStorage.setItem('equipeExec', JSON.stringify(executantes));
-            localStorage.setItem('equipeApoio', JSON.stringify(apoios));
-            localStorage.setItem('locaisTelecom', JSON.stringify(locaisDb));
+        function renderizarNomes() {
+            const execSel = document.getElementById('executante');
+            const apoioSel = document.getElementById('apoio');
+            const admLista = document.getElementById('listaNomesAdm');
             
-            atualizarLocais(); // Atualiza o dropdown principal
-        }
+            execSel.innerHTML = '<option value="">Selecione o Colaborador</option>';
+            apoioSel.innerHTML = '<option value="">Selecione o Apoio (opcional)</option>';
+            admLista.innerHTML = '';
 
-        function renderizarListaAdmLocais() {
-            const siteAdm = document.getElementById('siteAdmLocal').value;
-            const aLocais = document.getElementById('admListaLocais');
-            aLocais.innerHTML = `<p class="text-[10px] text-slate-400 font-bold mb-1">LOCAIS ATUAIS EM ${siteAdm}:</p>`;
-            
-            locaisDb[siteAdm].sort().forEach((l, i) => {
-                aLocais.innerHTML += `<div class="flex justify-between p-1 bg-slate-50 border rounded items-center"><span>${l}</span><button onclick="removerLocal('${siteAdm}', ${i})" class="text-red-500 font-bold p-1 italic text-[10px]">EXCLUIR</button></div>`;
+            nomesEquipe.sort().forEach((nome, i) => {
+                // Dropdowns
+                execSel.innerHTML += `<option value="${nome}">${nome}</option>`;
+                apoioSel.innerHTML += `<option value="${nome}">${nome}</option>`;
+                // ADM
+                admLista.innerHTML += `<div class="flex justify-between bg-slate-100 p-1 rounded"><span>${nome}</span><button onclick="removerNome(${i})" class="text-red-500 px-1">x</button></div>`;
             });
+            localStorage.setItem('nomesTelecom', JSON.stringify(nomesEquipe));
         }
 
-        // Listener para mudar a lista de locais no ADM ao trocar o site
-        document.getElementById('siteAdmLocal').addEventListener('change', renderizarListaAdmLocais);
-
-        function adicionarPessoa(tipo) {
-            const input = document.getElementById(tipo === 'exec' ? 'novoExec' : 'novoApoio');
-            if (input.value.trim()) {
-                if (tipo === 'exec') executantes.push(input.value.trim());
-                else apoios.push(input.value.trim());
-                input.value = ''; renderizarTudo();
+        function adicionarNome() {
+            const input = document.getElementById('novoNome');
+            if(input.value.trim()) {
+                nomesEquipe.push(input.value.trim());
+                input.value = '';
+                renderizarNomes();
             }
         }
 
-        function removerPessoa(tipo, i) {
-            if (confirm("Remover da lista?")) {
-                if (tipo === 'exec') executantes.splice(i, 1);
-                else apoios.splice(i, 1);
-                renderizarTudo();
-            }
-        }
-
-        function adicionarLocal() {
-            const site = document.getElementById('siteAdmLocal').value;
-            const input = document.getElementById('novoLocal');
-            if (input.value.trim()) {
-                locaisDb[site].push(input.value.trim());
-                input.value = ''; renderizarTudo();
-            }
-        }
-
-        function removerLocal(site, i) {
-            if (confirm(`Remover este local de ${site}?`)) {
-                locaisDb[site].splice(i, 1);
-                renderizarTudo();
-            }
+        function removerNome(i) {
+            nomesEquipe.splice(i, 1);
+            renderizarNomes();
         }
 
         function atualizarLocais() {
-            const siteSel = document.getElementById('site').value;
-            const drop = document.getElementById('local');
-            const selecionadoAnterior = drop.value;
+            const site = document.getElementById('site').value;
+            const localSel = document.getElementById('local');
+            localSel.innerHTML = '<option value="">Selecione o Local</option>';
             
-            drop.innerHTML = '<option value="">Selecione o Local...</option>';
-            if (siteSel && locaisDb[siteSel]) {
-                drop.disabled = false;
-                locaisDb[siteSel].sort().forEach(l => {
-                    let o = document.createElement('option');
-                    o.value = o.text = l;
-                    if(l === selecionadoAnterior) o.selected = true;
-                    drop.appendChild(o);
+            if(site && locaisData[site]) {
+                localSel.disabled = false;
+                locaisData[site].forEach(l => {
+                    localSel.innerHTML += `<option value="${l}">${l}</option>`;
                 });
-            } else drop.disabled = true;
+            } else {
+                localSel.disabled = true;
+            }
         }
 
         function enviarWhatsApp() {
-            const selExec = Array.from(document.querySelectorAll('input[name="execCheck"]:checked')).map(c => c.value);
-            const selApoio = Array.from(document.querySelectorAll('input[name="apoioCheck"]:checked')).map(c => c.value);
             const site = document.getElementById('site').value;
             const local = document.getElementById('local').value;
-
-            if(!site || !local || selExec.length === 0) {
-                alert("Erro: Preencha Site, Local e pelo menos 1 Executante."); return;
-            }
-
+            const exec = document.getElementById('executante').value;
+            const apoio = document.getElementById('apoio').value;
+            const status = document.getElementById('status').value;
             const data = document.getElementById('dataAtividade').value.split('-').reverse().join('/');
             const hora = document.getElementById('horaAtividade').value;
+
+            if(!site || !local || !exec) {
+                alert("Por favor, preencha Site, Local e Colaborador.");
+                return;
+            }
 
             let msg = `*ATIVIDADE*\nPreventiva de Rack e Sala de Telecom\n\n`;
             msg += `*° DATA/HORA*\n${data} às ${hora}\n\n`;
             msg += `*° SITE*\n${site}\n\n`;
             msg += `*° LOCAL*\n${local}\n\n`;
-            msg += `*° COLABORADORES*\n° ${selExec.join('\n° ')}\n\n`;
-            msg += `*° APOIO*\n${selApoio.length > 0 ? '° ' + selApoio.join('\n° ') : 'Nenhum'}\n\n`;
-            msg += `*° STATUS*\n${document.getElementById('status').value}`;
+            msg += `*° COLABORADOR*\n° ${exec}\n\n`;
+            msg += `*° APOIO*\n${apoio ? '° ' + apoio : 'Nenhum'}\n\n`;
+            msg += `*° STATUS*\n${status}`;
 
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         function abrirModal() { document.getElementById('modalAdm').style.display = 'flex'; }
         function fecharModal() { document.getElementById('modalAdm').style.display = 'none'; }
-        
-        // Setup Inicial
+
+        // Inicialização
         (function() {
-            const n = new Date();
-            document.getElementById('dataAtividade').value = n.toISOString().split('T')[0];
-            document.getElementById('horaAtividade').value = n.toTimeString().split(' ')[0].substring(0, 5);
-            document.getElementById('displayData').innerText = n.toLocaleDateString('pt-BR');
-            renderizarTudo();
+            const agora = new Date();
+            document.getElementById('dataAtividade').value = agora.toISOString().split('T')[0];
+            document.getElementById('horaAtividade').value = agora.toTimeString().split(' ')[0].substring(0, 5);
+            document.getElementById('displayData').innerText = agora.toLocaleDateString('pt-BR');
+            renderizarNomes();
         })();
     </script>
 </body>
