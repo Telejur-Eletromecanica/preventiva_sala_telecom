@@ -40,7 +40,7 @@
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Site</label>
-                <select id="site" onchange="atualizarLocais()" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400">
+                <select id="site" onchange="atualizarLocais()" class="w-full rounded border p-2 bg-white text-sm outline-none">
                     <option value="">Selecione o Site</option>
                     <option value="JBE">JBE</option>
                     <option value="JPO">JPO</option>
@@ -49,23 +49,21 @@
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Local</label>
-                <select id="local" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400" disabled>
+                <select id="local" class="w-full rounded border p-2 bg-white text-sm outline-none" disabled>
                     <option value="">Selecione o Site primeiro</option>
                 </select>
             </div>
 
             <div>
-                <label class="block text-[10px] font-bold text-slate-500 uppercase">Colaborador</label>
-                <select id="executante" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400">
-                    <option value="">Selecione o Colaborador</option>
-                </select>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Colaboradores</label>
+                <div id="listaExecutantes" class="custom-scroll grid grid-cols-1 gap-1 max-h-40 overflow-y-auto p-3 border rounded bg-slate-50 text-sm">
+                    </div>
             </div>
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Apoio</label>
-                <select id="apoio" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400">
-                    <option value="">Selecione o Apoio (opcional)</option>
-                </select>
+                <select id="apoio" class="w-full rounded border p-2 bg-white text-sm outline-none">
+                    </select>
             </div>
 
             <div>
@@ -130,17 +128,17 @@
         let apoios = JSON.parse(localStorage.getItem('tel_apoios')) || apoioBase;
 
         function renderizarListas() {
-            const execSel = document.getElementById('executante');
+            const execDiv = document.getElementById('listaExecutantes');
             const apoioSel = document.getElementById('apoio');
             const admColab = document.getElementById('listaColabAdm');
             const admApoio = document.getElementById('listaApoioAdm');
 
-            execSel.innerHTML = '<option value="">Selecione o Colaborador</option>';
+            execDiv.innerHTML = '';
             apoioSel.innerHTML = '<option value="">Selecione o Apoio (opcional)</option>';
             admColab.innerHTML = ''; admApoio.innerHTML = '';
 
             colabs.sort().forEach((n, i) => {
-                execSel.innerHTML += `<option value="${n}">${n}</option>`;
+                execDiv.innerHTML += `<label class="flex items-center space-x-2 p-1 border-b border-slate-100 last:border-0"><input type="checkbox" name="execCheck" value="${n}" class="w-4 h-4 text-blue-600 rounded"><span>${n}</span></label>`;
                 admColab.innerHTML += `<div class="flex justify-between bg-slate-50 p-1 border rounded items-center"><span>${n}</span><button onclick="removerPessoa('colab', ${i})" class="text-red-500 font-bold p-1 italic text-[10px]">REMOVER</button></div>`;
             });
 
@@ -183,19 +181,19 @@
         function enviarWhatsApp() {
             const site = document.getElementById('site').value;
             const local = document.getElementById('local').value;
-            const exec = document.getElementById('executante').value;
+            const selecionados = Array.from(document.querySelectorAll('input[name="execCheck"]:checked')).map(c => c.value);
             const apoio = document.getElementById('apoio').value;
             const status = document.getElementById('status').value;
             const data = document.getElementById('dataAtividade').value.split('-').reverse().join('/');
             const hora = document.getElementById('horaAtividade').value;
 
-            if(!site || !local || !exec) { alert("Preencha Site, Local e Colaborador."); return; }
+            if(!site || !local || selecionados.length === 0) { alert("Preencha Site, Local e pelo menos 1 Colaborador."); return; }
 
             let msg = `*ATIVIDADE*\nPreventiva de Rack e Sala de Telecom\n\n`;
             msg += `*° DATA/HORA*\n${data} às ${hora}\n\n`;
             msg += `*° SITE*\n${site}\n\n`;
             msg += `*° LOCAL*\n${local}\n\n`;
-            msg += `*° COLABORADOR*\n° ${exec}\n\n`;
+            msg += `*° COLABORADORES*\n° ${selecionados.join('\n° ')}\n\n`;
             msg += `*° APOIO*\n${apoio ? '° ' + apoio : 'Nenhum'}\n\n`;
             msg += `*° STATUS*\n${status}`;
 
@@ -206,10 +204,14 @@
         function fecharModal() { document.getElementById('modalAdm').style.display = 'none'; }
 
         (function() {
-            const n = new Date();
-            document.getElementById('dataAtividade').value = n.toISOString().split('T')[0];
-            document.getElementById('horaAtividade').value = n.toTimeString().split(' ')[0].substring(0, 5);
-            document.getElementById('displayData').innerText = n.toLocaleDateString('pt-BR');
+            const agora = new Date();
+            // Correção de data para fuso local
+            const offset = agora.getTimezoneOffset() * 60000;
+            const dataLocal = new Date(agora.getTime() - offset).toISOString().split('T')[0];
+            
+            document.getElementById('dataAtividade').value = dataLocal;
+            document.getElementById('horaAtividade').value = agora.toTimeString().split(' ')[0].substring(0, 5);
+            document.getElementById('displayData').innerText = agora.toLocaleDateString('pt-BR');
             renderizarListas();
         })();
     </script>
