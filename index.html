@@ -10,13 +10,47 @@
         .custom-scroll::-webkit-scrollbar { width: 5px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         
-        /* Estilo para a lista suspensa selecionável */
-        .dropdown-check-list { display: inline-block; width: 100%; position: relative; }
-        .dropdown-check-list .anchor { position: relative; cursor: pointer; display: block; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff; font-size: 14px; }
-        .dropdown-check-list .anchor:after { content: ""; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #333; position: absolute; right: 10px; top: 45%; }
-        .dropdown-check-list ul.items { padding: 5px; display: none; position: absolute; border: 1px solid #cbd5e1; border-top: none; width: 100%; background: #fff; z-index: 10; max-height: 200px; overflow-y: auto; }
-        .dropdown-check-list ul.items li { list-style: none; padding: 2px 0; }
-        .dropdown-check-list.visible ul.items { display: block; }
+        /* Estilo da Lista Suspensa Selecionável (Dropdown Multi-Select) */
+        .multiselect-container { position: relative; width: 100%; }
+        .select-box { 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            padding: 8px 12px; 
+            border: 1px solid #cbd5e1; 
+            border-radius: 0.5rem; 
+            background: #fff; 
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        .select-box:after {
+            content: ""; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #64748b;
+        }
+        .checkboxes-list {
+            display: none;
+            position: absolute;
+            top: 100%; left: 0; right: 0;
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            border-top: none;
+            z-index: 20;
+            max-height: 200px;
+            overflow-y: auto;
+            border-bottom-left-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        .checkboxes-list label {
+            display: block;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .checkboxes-list label:hover { background: #f8fafc; }
+        .checkboxes-list input { margin-right: 10px; }
+        .show { display: block; }
     </style>
 </head>
 <body class="bg-slate-100 p-2 sm:p-4 font-sans">
@@ -34,21 +68,21 @@
             </button>
         </div>
 
-        <form id="atividadeForm" class="p-5 space-y-4">
+        <form id="atividadeForm" class="p-5 space-y-4" onclick="fecharDropExterno(event)">
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-[10px] font-bold text-slate-500 uppercase">Data</label>
-                    <input type="date" id="dataAtividade" class="w-full rounded border-slate-300 p-2 bg-slate-50 text-sm outline-none">
+                    <input type="date" id="dataAtividade" class="w-full rounded-lg border-slate-300 p-2 bg-slate-50 text-sm outline-none">
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-slate-500 uppercase">Hora</label>
-                    <input type="time" id="horaAtividade" class="w-full rounded border-slate-300 p-2 bg-slate-50 text-sm outline-none">
+                    <input type="time" id="horaAtividade" class="w-full rounded-lg border-slate-300 p-2 bg-slate-50 text-sm outline-none">
                 </div>
             </div>
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Site</label>
-                <select id="site" onchange="atualizarLocais()" class="w-full rounded border p-2 bg-white text-sm outline-none">
+                <select id="site" onchange="atualizarLocais()" class="w-full rounded-lg border p-2 bg-white text-sm outline-none appearance-none">
                     <option value="">Selecione o Site</option>
                     <option value="JBE">JBE</option>
                     <option value="JPO">JPO</option>
@@ -57,29 +91,29 @@
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Local</label>
-                <select id="local" class="w-full rounded border p-2 bg-white text-sm outline-none" disabled>
+                <select id="local" class="w-full rounded-lg border p-2 bg-white text-sm outline-none disabled:bg-slate-50" disabled>
                     <option value="">Selecione o Site primeiro</option>
                 </select>
             </div>
 
-            <div>
+            <div class="multiselect-container">
                 <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Colaboradores</label>
-                <div id="listColab" class="dropdown-check-list" tabindex="100">
-                    <span class="anchor" id="colabSelectedText">Selecionar Colaboradores</span>
-                    <ul class="items custom-scroll" id="ulColab">
-                        </ul>
+                <div class="select-box" id="dropBtn" onclick="toggleCheckboxArea()">
+                    <span id="colabPlaceholder">Selecionar Colaboradores</span>
                 </div>
+                <div id="checkboxesArea" class="checkboxes-list custom-scroll">
+                    </div>
             </div>
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Apoio</label>
-                <select id="apoio" class="w-full rounded border p-2 bg-white text-sm outline-none">
+                <select id="apoio" class="w-full rounded-lg border p-2 bg-white text-sm outline-none">
                     </select>
             </div>
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Status</label>
-                <select id="status" class="w-full rounded border p-2 bg-white text-sm font-bold text-blue-600 outline-none">
+                <select id="status" class="w-full rounded-lg border p-2 bg-white text-sm font-bold text-blue-600 outline-none">
                     <option value="Concluído">✅ Concluído</option>
                     <option value="Em Andamento">⏳ Em Andamento</option>
                 </select>
@@ -117,7 +151,7 @@
                 </section>
             </div>
             <div class="p-4 bg-slate-50 border-t">
-                <button onclick="fecharModal()" class="w-full bg-slate-800 text-white py-2 rounded font-bold text-sm">Fechar e Salvar</button>
+                <button onclick="fecharModal()" class="w-full bg-slate-800 text-white py-2 rounded font-bold text-sm">Salvar Alterações</button>
             </div>
         </div>
     </div>
@@ -131,25 +165,28 @@
         let colabs = JSON.parse(localStorage.getItem('tel_colabs')) || ["Adriano Nascimento", "Cezar Prado", "Deivison Aleidson", "Deivison Barros", "Edenildo Rodrigues", "Ezequiel", "Francivaldo Costa", "Jean Soares", "Jeiel Lobato", "Joelcinei Guimarães", "José Antônio", "Juenisson Belem", "Lucas Santos", "Matheus Costa", "Rafael Gonçalves", "Reginaldo Pereira", "Welyton Pereira"];
         let apoios = JSON.parse(localStorage.getItem('tel_apoios')) || ["Joelcinei", "Francivaldo", "Adriano Nascimento", "Ezequiel", "Reginaldo"];
 
-        // Toggle do Dropdown de Colaboradores
-        const checkList = document.getElementById('listColab');
-        checkList.getElementsByClassName('anchor')[0].onclick = function(evt) {
-            if (checkList.classList.contains('visible')) checkList.classList.remove('visible');
-            else checkList.classList.add('visible');
-        };
+        function toggleCheckboxArea() {
+            document.getElementById("checkboxesArea").classList.toggle("show");
+        }
+
+        function fecharDropExterno(e) {
+            if (!document.querySelector('.multiselect-container').contains(e.target)) {
+                document.getElementById("checkboxesArea").classList.remove("show");
+            }
+        }
 
         function renderizarListas() {
-            const ulColab = document.getElementById('ulColab');
+            const areaCheck = document.getElementById('checkboxesArea');
             const apoioSel = document.getElementById('apoio');
             const admColab = document.getElementById('listaColabAdm');
             const admApoio = document.getElementById('listaApoioAdm');
 
-            ulColab.innerHTML = '';
+            areaCheck.innerHTML = '';
             apoioSel.innerHTML = '<option value="">Selecione o Apoio (opcional)</option>';
             admColab.innerHTML = ''; admApoio.innerHTML = '';
 
             colabs.sort().forEach((n, i) => {
-                ulColab.innerHTML += `<li><input type="checkbox" class="mr-2" value="${n}" onchange="updateColabText()" />${n}</li>`;
+                areaCheck.innerHTML += `<label><input type="checkbox" value="${n}" onchange="atualizarTextoColab()"> ${n}</label>`;
                 admColab.innerHTML += `<div class="flex justify-between bg-slate-50 p-1 border rounded items-center"><span>${n}</span><button onclick="removerPessoa('colab', ${i})" class="text-red-500 font-bold p-1 italic text-[10px]">REMOVER</button></div>`;
             });
 
@@ -160,13 +197,15 @@
 
             localStorage.setItem('tel_colabs', JSON.stringify(colabs));
             localStorage.setItem('tel_apoios', JSON.stringify(apoios));
-            updateColabText();
+            atualizarTextoColab();
         }
 
-        function updateColabText() {
-            const checked = Array.from(document.querySelectorAll('#ulColab input:checked'));
-            const text = checked.length > 0 ? `${checked.length} selecionado(s)` : 'Selecionar Colaboradores';
-            document.getElementById('colabSelectedText').innerText = text;
+        function atualizarTextoColab() {
+            const selecionados = Array.from(document.querySelectorAll('#checkboxesArea input:checked'));
+            const display = document.getElementById('colabPlaceholder');
+            if (selecionados.length === 0) display.innerText = "Selecionar Colaboradores";
+            else if (selecionados.length === 1) display.innerText = selecionados[0].value;
+            else display.innerText = selecionados.length + " Selecionados";
         }
 
         function adicionarPessoa(tipo) {
@@ -199,13 +238,13 @@
         function enviarWhatsApp() {
             const site = document.getElementById('site').value;
             const local = document.getElementById('local').value;
-            const selecionados = Array.from(document.querySelectorAll('#ulColab input:checked')).map(c => c.value);
+            const selecionados = Array.from(document.querySelectorAll('#checkboxesArea input:checked')).map(c => c.value);
             const apoio = document.getElementById('apoio').value;
             const status = document.getElementById('status').value;
             const data = document.getElementById('dataAtividade').value.split('-').reverse().join('/');
             const hora = document.getElementById('horaAtividade').value;
 
-            if(!site || !local || selecionados.length === 0) { alert("Preencha Site, Local e pelo menos 1 Colaborador."); return; }
+            if(!site || !local || selecionados.length === 0) { alert("Preencha Site, Local e Colaboradores."); return; }
 
             let msg = `*ATIVIDADE*\nPreventiva de Rack e Sala de Telecom\n\n`;
             msg += `*° DATA/HORA*\n${data} às ${hora}\n\n`;
