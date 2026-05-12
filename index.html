@@ -9,6 +9,8 @@
         .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
         .custom-scroll::-webkit-scrollbar { width: 5px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        /* Estilo para permitir múltipla seleção visual em dropdown se o navegador suportar, 
+           ou instrução clara para o usuário */
     </style>
 </head>
 <body class="bg-slate-100 p-2 sm:p-4 font-sans">
@@ -55,9 +57,9 @@
             </div>
 
             <div>
-                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Colaboradores</label>
-                <div id="listaExecutantes" class="custom-scroll grid grid-cols-1 gap-1 max-h-40 overflow-y-auto p-3 border rounded bg-slate-50 text-sm">
-                    </div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase">Colaboradores (Segure CTRL para vários)</label>
+                <select id="executante" multiple class="w-full rounded border p-2 bg-white text-sm outline-none h-32 custom-scroll">
+                    </select>
             </div>
 
             <div>
@@ -128,17 +130,17 @@
         let apoios = JSON.parse(localStorage.getItem('tel_apoios')) || apoioBase;
 
         function renderizarListas() {
-            const execDiv = document.getElementById('listaExecutantes');
+            const execSel = document.getElementById('executante');
             const apoioSel = document.getElementById('apoio');
             const admColab = document.getElementById('listaColabAdm');
             const admApoio = document.getElementById('listaApoioAdm');
 
-            execDiv.innerHTML = '';
+            execSel.innerHTML = '';
             apoioSel.innerHTML = '<option value="">Selecione o Apoio (opcional)</option>';
             admColab.innerHTML = ''; admApoio.innerHTML = '';
 
             colabs.sort().forEach((n, i) => {
-                execDiv.innerHTML += `<label class="flex items-center space-x-2 p-1 border-b border-slate-100 last:border-0"><input type="checkbox" name="execCheck" value="${n}" class="w-4 h-4 text-blue-600 rounded"><span>${n}</span></label>`;
+                execSel.innerHTML += `<option value="${n}">${n}</option>`;
                 admColab.innerHTML += `<div class="flex justify-between bg-slate-50 p-1 border rounded items-center"><span>${n}</span><button onclick="removerPessoa('colab', ${i})" class="text-red-500 font-bold p-1 italic text-[10px]">REMOVER</button></div>`;
             });
 
@@ -181,7 +183,7 @@
         function enviarWhatsApp() {
             const site = document.getElementById('site').value;
             const local = document.getElementById('local').value;
-            const selecionados = Array.from(document.querySelectorAll('input[name="execCheck"]:checked')).map(c => c.value);
+            const selecionados = Array.from(document.getElementById('executante').selectedOptions).map(opt => opt.value);
             const apoio = document.getElementById('apoio').value;
             const status = document.getElementById('status').value;
             const data = document.getElementById('dataAtividade').value.split('-').reverse().join('/');
@@ -205,7 +207,6 @@
 
         (function() {
             const agora = new Date();
-            // Correção de data para fuso local
             const offset = agora.getTimezoneOffset() * 60000;
             const dataLocal = new Date(agora.getTime() - offset).toISOString().split('T')[0];
             
