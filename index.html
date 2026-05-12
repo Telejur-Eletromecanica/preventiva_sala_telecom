@@ -40,7 +40,7 @@
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Site</label>
-                <select id="site" onchange="atualizarLocais()" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400">
+                <select id="site" onchange="atualizarLocais()" class="w-full rounded border p-2 bg-white text-sm outline-none">
                     <option value="">Selecione o Site</option>
                     <option value="JBE">JBE</option>
                     <option value="JPO">JPO</option>
@@ -49,23 +49,21 @@
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Local</label>
-                <select id="local" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400" disabled>
+                <select id="local" class="w-full rounded border p-2 bg-white text-sm outline-none" disabled>
                     <option value="">Selecione o Site primeiro</option>
                 </select>
             </div>
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Colaborador</label>
-                <select id="executante" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400">
-                    <option value="">Selecione o Colaborador</option>
-                </select>
+                <select id="executante" class="w-full rounded border p-2 bg-white text-sm outline-none">
+                    </select>
             </div>
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Apoio</label>
-                <select id="apoio" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400">
-                    <option value="">Selecione o Apoio (opcional)</option>
-                </select>
+                <select id="apoio" class="w-full rounded border p-2 bg-white text-sm outline-none">
+                    </select>
             </div>
 
             <div>
@@ -83,102 +81,103 @@
     </div>
 
     <div id="modalAdm" class="modal flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="bg-slate-200 p-4 flex justify-between items-center">
-                <span class="font-bold text-slate-700 uppercase text-xs tracking-widest">Gerenciar Equipe</span>
+                <span class="font-bold text-slate-700 uppercase text-xs tracking-widest">Painel Administrativo</span>
                 <button onclick="fecharModal()" class="text-slate-500 text-2xl leading-none">&times;</button>
             </div>
-            <div class="p-4 space-y-4 overflow-y-auto custom-scroll">
-                <div class="flex gap-2">
-                    <input type="text" id="novoNome" placeholder="Novo nome..." class="flex-1 border rounded p-2 text-sm outline-none">
-                    <button onclick="adicionarNome()" class="bg-blue-600 text-white px-4 rounded font-bold">+</button>
-                </div>
-                <div id="listaNomesAdm" class="space-y-1 text-sm">
+            
+            <div class="p-4 space-y-6 overflow-y-auto custom-scroll">
+                <section>
+                    <h3 class="text-[10px] font-black text-blue-600 uppercase mb-2">Gerenciar Colaboradores</h3>
+                    <div class="flex gap-2 mb-2">
+                        <input type="text" id="novoColab" placeholder="Nome..." class="flex-1 border rounded p-2 text-sm outline-none">
+                        <button onclick="adicionarPessoa('colab')" class="bg-blue-600 text-white px-3 rounded font-bold">+</button>
                     </div>
+                    <div id="listaColabAdm" class="space-y-1 text-xs"></div>
+                </section>
+
+                <hr>
+
+                <section>
+                    <h3 class="text-[10px] font-black text-green-600 uppercase mb-2">Gerenciar Apoio</h3>
+                    <div class="flex gap-2 mb-2">
+                        <input type="text" id="novoApoio" placeholder="Nome..." class="flex-1 border rounded p-2 text-sm outline-none">
+                        <button onclick="adicionarPessoa('apoio')" class="bg-green-600 text-white px-3 rounded font-bold">+</button>
+                    </div>
+                    <div id="listaApoioAdm" class="space-y-1 text-xs"></div>
+                </section>
             </div>
+
             <div class="p-4 bg-slate-50 border-t">
-                <button onclick="fecharModal()" class="w-full bg-slate-800 text-white py-2 rounded font-bold text-sm">Salvar e Fechar</button>
+                <button onclick="fecharModal()" class="w-full bg-slate-800 text-white py-2 rounded font-bold text-sm">Fechar e Salvar</button>
             </div>
         </div>
     </div>
 
     <script>
-        // LISTA DE LOCAIS
+        // Dados de Locais (Imagens enviadas)
         const locaisData = {
-            'JBE': [
-                "001B - Escritório ADM", "001B - Escritorio Móvel", "002B - Portaria", "003B - Restaurante", "004B - Ambulatório",
-                "006B - Brigada Bombeiros", "112B - Subestação Principal", "114B - Prédio CapEx Lagos", "146B - Laboratório Fisico",
-                "146B - Laboratório Quimico", "147B - Almoxarifado", "148A - Oficina Central", "148C - Oficina Veiculos Leves",
-                "148F - Oficina de Vagões", "148G - Oficina de Caldeiraria", "149B - Manutenção MTUR", "370B - ETA", "373B - ETE",
-                "378B - Prédio do CRAS", "611B - Sala de Telecom da TT", "613B - Posto de Abastecimento", "621B - Empilhadeira",
-                "631A - Sala de Controle", "631B - Planta de Lavagem", "641B - Empilhadeira", "641B - Sala de Telecom da TT",
-                "642B - Sala de Preparação de Amostras", "661B - Escritório da Lagoa LE", "967B - Torre de Telecomunicações",
-                "S372 - Subestação da Captação", "S611 - Subestação Britagem", "S621 - Subestação Pilha Britados",
-                "S631 - Subestação Predio Lavagem", "S641 - Subestação Pilha Lavados", "S651 - Subestação Distr. Água",
-                "S661 - Subestação da Lagoa"
-            ],
-            'JPO': [
-                "001P - Escritório ADM", "002P - Portaria", "003P - Restaurante", "004P - Ambulatório", "006P - Brigada Bombeiros",
-                "112P - Subestação Principal", "126P - Posto de Abastecimento", "147P - Almoxarifado", "148P - Oficina Central",
-                "148P - Oficina MPOR", "370P - ETA", "373P - ETE", "410A - Sala de Controle", "410P - Sala de Telecom Pier",
-                "412P - Carregador de Navios", "412P - Retomadora", "412P - Sala de Telecom", "415P - Empilhadeira",
-                "415P - Sala de Telecom", "602P - Viveiro de Mudas", "967P - Torre de Telecomunicações", "S370 - Sala de Telecom",
-                "S412 - Subestação Expedição", "S415 - Subestação Estocagem", "S481 - Subestação Virador de Vagões"
-            ]
+            'JBE': ["001B - Escritório ADM", "001B - Escritorio Móvel", "002B - Portaria", "003B - Restaurante", "004B - Ambulatório", "006B - Brigada Bombeiros", "112B - Subestação Principal", "114B - Prédio CapEx Lagos", "146B - Laboratório Fisico", "146B - Laboratório Quimico", "147B - Almoxarifado", "148A - Oficina Central", "148C - Oficina Veiculos Leves", "148F - Oficina de Vagões", "148G - Oficina de Caldeiraria", "149B - Manutenção MTUR", "370B - ETA", "373B - ETE", "378B - Prédio do CRAS", "611B - Sala de Telecom da TT", "613B - Posto de Abastecimento", "621B - Empilhadeira", "631A - Sala de Controle", "631B - Planta de Lavagem", "641B - Empilhadeira", "641B - Sala de Telecom da TT", "642B - Sala de Preparação de Amostras", "661B - Escritório da Lagoa LE", "967B - Torre de Telecomunicações", "S372 - Subestação da Captação", "S611 - Subestação Britagem", "S621 - Subestação Pilha Britados", "S631 - Subestação Predio Lavagem", "S641 - Subestação Pilha Lavados", "S651 - Subestação Distr. Água", "S661 - Subestação da Lagoa"],
+            'JPO': ["001P - Escritório ADM", "002P - Portaria", "003P - Restaurante", "004P - Ambulatório", "006P - Brigada Bombeiros", "112P - Subestação Principal", "126P - Posto de Abastecimento", "147P - Almoxarifado", "148P - Oficina Central", "148P - Oficina MPOR", "370P - ETA", "373P - ETE", "410A - Sala de Controle", "410P - Sala de Telecom Pier", "412P - Carregador de Navios", "412P - Retomadora", "412P - Sala de Telecom", "415P - Empilhadeira", "415P - Sala de Telecom", "602P - Viveiro de Mudas", "967P - Torre de Telecomunicações", "S370 - Sala de Telecom", "S412 - Subestação Expedição", "S415 - Subestação Estocagem", "S481 - Subestação Virador de Vagões"]
         };
 
-        const nomesIniciais = ["Adriano Nascimento", "Cezar Prado", "Deivison Aleidson", "Deivison Barros", "Edenildo Rodrigues", "Ezequiel", "Francivaldo Costa", "Jean Soares", "Jeiel Lobato", "Joelcinei Guimarães", "José Antônio", "Juenisson Belem", "Lucas Santos", "Matheus Costa", "Rafael Gonçalves", "Reginaldo Pereira", "Welyton Pereira"];
+        // Listas Iniciais
+        const colabBase = ["Adriano Nascimento", "Cezar Prado", "Deivison Aleidson", "Deivison Barros", "Edenildo Rodrigues", "Ezequiel", "Francivaldo Costa", "Jean Soares", "Jeiel Lobato", "Joelcinei Guimarães", "José Antônio", "Juenisson Belem", "Lucas Santos", "Matheus Costa", "Rafael Gonçalves", "Reginaldo Pereira", "Welyton Pereira"];
+        const apoioBase = ["Joelcinei", "Francivaldo", "Adriano Nascimento", "Ezequiel", "Reginaldo"];
 
-        let nomesEquipe = JSON.parse(localStorage.getItem('nomesTelecom')) || nomesIniciais;
+        let colabs = JSON.parse(localStorage.getItem('tel_colabs')) || colabBase;
+        let apoios = JSON.parse(localStorage.getItem('tel_apoios')) || apoioBase;
 
-        function renderizarNomes() {
+        function renderizarListas() {
             const execSel = document.getElementById('executante');
             const apoioSel = document.getElementById('apoio');
-            const admLista = document.getElementById('listaNomesAdm');
-            
+            const admColab = document.getElementById('listaColabAdm');
+            const admApoio = document.getElementById('listaApoioAdm');
+
             execSel.innerHTML = '<option value="">Selecione o Colaborador</option>';
             apoioSel.innerHTML = '<option value="">Selecione o Apoio (opcional)</option>';
-            admLista.innerHTML = '';
+            admColab.innerHTML = ''; admApoio.innerHTML = '';
 
-            nomesEquipe.sort().forEach((nome, i) => {
-                // Dropdowns do Formulário
-                execSel.innerHTML += `<option value="${nome}">${nome}</option>`;
-                apoioSel.innerHTML += `<option value="${nome}">${nome}</option>`;
-                // Lista de Exclusão no ADM
-                admLista.innerHTML += `<div class="flex justify-between bg-slate-50 p-2 border rounded items-center"><span>${nome}</span><button onclick="removerNome(${i})" class="text-red-500 font-bold text-xs uppercase">Excluir</button></div>`;
+            colabs.sort().forEach((n, i) => {
+                execSel.innerHTML += `<option value="${n}">${n}</option>`;
+                admColab.innerHTML += `<div class="flex justify-between bg-slate-50 p-1 border rounded items-center"><span>${n}</span><button onclick="removerPessoa('colab', ${i})" class="text-red-500 font-bold p-1 italic text-[10px]">REMOVER</button></div>`;
             });
-            localStorage.setItem('nomesTelecom', JSON.stringify(nomesEquipe));
+
+            apoios.sort().forEach((n, i) => {
+                apoioSel.innerHTML += `<option value="${n}">${n}</option>`;
+                admApoio.innerHTML += `<div class="flex justify-between bg-slate-50 p-1 border rounded items-center"><span>${n}</span><button onclick="removerPessoa('apoio', ${i})" class="text-red-500 font-bold p-1 italic text-[10px]">REMOVER</button></div>`;
+            });
+
+            localStorage.setItem('tel_colabs', JSON.stringify(colabs));
+            localStorage.setItem('tel_apoios', JSON.stringify(apoios));
         }
 
-        function adicionarNome() {
-            const input = document.getElementById('novoNome');
+        function adicionarPessoa(tipo) {
+            const input = document.getElementById(tipo === 'colab' ? 'novoColab' : 'novoApoio');
             if (input.value.trim()) {
-                nomesEquipe.push(input.value.trim());
-                input.value = '';
-                renderizarNomes();
+                if (tipo === 'colab') colabs.push(input.value.trim());
+                else apoios.push(input.value.trim());
+                input.value = ''; renderizarListas();
             }
         }
 
-        function removerNome(i) {
-            if (confirm("Remover este nome da lista?")) {
-                nomesEquipe.splice(i, 1);
-                renderizarNomes();
+        function removerPessoa(tipo, i) {
+            if (confirm("Remover da lista?")) {
+                if (tipo === 'colab') colabs.splice(i, 1);
+                else apoios.splice(i, 1);
+                renderizarListas();
             }
         }
 
         function atualizarLocais() {
             const site = document.getElementById('site').value;
-            const localSel = document.getElementById('local');
-            localSel.innerHTML = '<option value="">Selecione o Local</option>';
-            
-            if (site && locaisData[site]) {
-                localSel.disabled = false;
-                locaisData[site].forEach(l => {
-                    localSel.innerHTML += `<option value="${l}">${l}</option>`;
-                });
-            } else {
-                localSel.disabled = true;
-            }
+            const drop = document.getElementById('local');
+            drop.innerHTML = '<option value="">Selecione o Local</option>';
+            if (site) {
+                drop.disabled = false;
+                locaisData[site].forEach(l => { drop.innerHTML += `<option value="${l}">${l}</option>`; });
+            } else drop.disabled = true;
         }
 
         function enviarWhatsApp() {
@@ -190,9 +189,7 @@
             const data = document.getElementById('dataAtividade').value.split('-').reverse().join('/');
             const hora = document.getElementById('horaAtividade').value;
 
-            if (!site || !local || !exec) {
-                alert("Erro: Preencha Site, Local e Colaborador."); return;
-            }
+            if(!site || !local || !exec) { alert("Preencha Site, Local e Colaborador."); return; }
 
             let msg = `*ATIVIDADE*\nPreventiva de Rack e Sala de Telecom\n\n`;
             msg += `*° DATA/HORA*\n${data} às ${hora}\n\n`;
@@ -208,13 +205,12 @@
         function abrirModal() { document.getElementById('modalAdm').style.display = 'flex'; }
         function fecharModal() { document.getElementById('modalAdm').style.display = 'none'; }
 
-        // Inicialização de Data, Hora e Listas
         (function() {
-            const agora = new Date();
-            document.getElementById('dataAtividade').value = agora.toISOString().split('T')[0];
-            document.getElementById('horaAtividade').value = agora.toTimeString().split(' ')[0].substring(0, 5);
-            document.getElementById('displayData').innerText = agora.toLocaleDateString('pt-BR');
-            renderizarNomes();
+            const n = new Date();
+            document.getElementById('dataAtividade').value = n.toISOString().split('T')[0];
+            document.getElementById('horaAtividade').value = n.toTimeString().split(' ')[0].substring(0, 5);
+            document.getElementById('displayData').innerText = n.toLocaleDateString('pt-BR');
+            renderizarListas();
         })();
     </script>
 </body>
