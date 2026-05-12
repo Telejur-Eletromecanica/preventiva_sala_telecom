@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatório de Atividades - Telecom</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
 </head>
 <body class="bg-slate-100 p-2 sm:p-4 font-sans">
 
@@ -14,8 +19,8 @@
                 <h2 class="font-bold text-lg">Registro de Atividade</h2>
                 <p id="displayData" class="text-xs text-slate-400"></p>
             </div>
-            <button onclick="abrirModal()" class="text-slate-500 hover:text-white p-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <button onclick="abrirModal()" class="text-slate-400 hover:text-white p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 </svg>
             </button>
@@ -53,14 +58,14 @@
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Colaborador</label>
                 <select id="executante" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400">
                     <option value="">Selecione o Colaborador</option>
-                    </select>
+                </select>
             </div>
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase">Apoio</label>
                 <select id="apoio" class="w-full rounded border p-2 bg-white text-sm outline-none focus:ring-2 focus:ring-slate-400">
                     <option value="">Selecione o Apoio (opcional)</option>
-                    </select>
+                </select>
             </div>
 
             <div>
@@ -77,20 +82,28 @@
         </form>
     </div>
 
-    <div id="modalAdm" style="display: none;" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-xl p-6 w-full max-w-xs">
-            <h3 class="font-bold mb-4">Gerenciar Nomes</h3>
-            <div class="flex gap-2 mb-4">
-                <input type="text" id="novoNome" placeholder="Nome..." class="border rounded p-1 text-sm flex-1">
-                <button onclick="adicionarNome()" class="bg-blue-600 text-white px-2 rounded">+</button>
+    <div id="modalAdm" class="modal flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
+            <div class="bg-slate-200 p-4 flex justify-between items-center">
+                <span class="font-bold text-slate-700 uppercase text-xs tracking-widest">Gerenciar Equipe</span>
+                <button onclick="fecharModal()" class="text-slate-500 text-2xl leading-none">&times;</button>
             </div>
-            <div id="listaNomesAdm" class="max-h-40 overflow-y-auto text-sm space-y-1"></div>
-            <button onclick="fecharModal()" class="mt-4 w-full bg-slate-200 py-2 rounded">Fechar</button>
+            <div class="p-4 space-y-4 overflow-y-auto custom-scroll">
+                <div class="flex gap-2">
+                    <input type="text" id="novoNome" placeholder="Novo nome..." class="flex-1 border rounded p-2 text-sm outline-none">
+                    <button onclick="adicionarNome()" class="bg-blue-600 text-white px-4 rounded font-bold">+</button>
+                </div>
+                <div id="listaNomesAdm" class="space-y-1 text-sm">
+                    </div>
+            </div>
+            <div class="p-4 bg-slate-50 border-t">
+                <button onclick="fecharModal()" class="w-full bg-slate-800 text-white py-2 rounded font-bold text-sm">Salvar e Fechar</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // LISTA DE LOCAIS EXATAMENTE COMO NA IMAGEM
+        // LISTA DE LOCAIS
         const locaisData = {
             'JBE': [
                 "001B - Escritório ADM", "001B - Escritorio Móvel", "002B - Portaria", "003B - Restaurante", "004B - Ambulatório",
@@ -114,9 +127,9 @@
             ]
         };
 
-        const nomesBase = ["Adriano Nascimento", "Cezar Prado", "Deivison Aleidson", "Deivison Barros", "Edenildo Rodrigues", "Ezequiel", "Francivaldo Costa", "Jean Soares", "Jeiel Lobato", "Joelcinei Guimarães", "José Antônio", "Juenisson Belem", "Lucas Santos", "Matheus Costa", "Rafael Gonçalves", "Reginaldo Pereira", "Welyton Pereira"];
-        
-        let nomesEquipe = JSON.parse(localStorage.getItem('nomesTelecom')) || nomesBase;
+        const nomesIniciais = ["Adriano Nascimento", "Cezar Prado", "Deivison Aleidson", "Deivison Barros", "Edenildo Rodrigues", "Ezequiel", "Francivaldo Costa", "Jean Soares", "Jeiel Lobato", "Joelcinei Guimarães", "José Antônio", "Juenisson Belem", "Lucas Santos", "Matheus Costa", "Rafael Gonçalves", "Reginaldo Pereira", "Welyton Pereira"];
+
+        let nomesEquipe = JSON.parse(localStorage.getItem('nomesTelecom')) || nomesIniciais;
 
         function renderizarNomes() {
             const execSel = document.getElementById('executante');
@@ -128,18 +141,18 @@
             admLista.innerHTML = '';
 
             nomesEquipe.sort().forEach((nome, i) => {
-                // Dropdowns
+                // Dropdowns do Formulário
                 execSel.innerHTML += `<option value="${nome}">${nome}</option>`;
                 apoioSel.innerHTML += `<option value="${nome}">${nome}</option>`;
-                // ADM
-                admLista.innerHTML += `<div class="flex justify-between bg-slate-100 p-1 rounded"><span>${nome}</span><button onclick="removerNome(${i})" class="text-red-500 px-1">x</button></div>`;
+                // Lista de Exclusão no ADM
+                admLista.innerHTML += `<div class="flex justify-between bg-slate-50 p-2 border rounded items-center"><span>${nome}</span><button onclick="removerNome(${i})" class="text-red-500 font-bold text-xs uppercase">Excluir</button></div>`;
             });
             localStorage.setItem('nomesTelecom', JSON.stringify(nomesEquipe));
         }
 
         function adicionarNome() {
             const input = document.getElementById('novoNome');
-            if(input.value.trim()) {
+            if (input.value.trim()) {
                 nomesEquipe.push(input.value.trim());
                 input.value = '';
                 renderizarNomes();
@@ -147,8 +160,10 @@
         }
 
         function removerNome(i) {
-            nomesEquipe.splice(i, 1);
-            renderizarNomes();
+            if (confirm("Remover este nome da lista?")) {
+                nomesEquipe.splice(i, 1);
+                renderizarNomes();
+            }
         }
 
         function atualizarLocais() {
@@ -156,7 +171,7 @@
             const localSel = document.getElementById('local');
             localSel.innerHTML = '<option value="">Selecione o Local</option>';
             
-            if(site && locaisData[site]) {
+            if (site && locaisData[site]) {
                 localSel.disabled = false;
                 locaisData[site].forEach(l => {
                     localSel.innerHTML += `<option value="${l}">${l}</option>`;
@@ -175,9 +190,8 @@
             const data = document.getElementById('dataAtividade').value.split('-').reverse().join('/');
             const hora = document.getElementById('horaAtividade').value;
 
-            if(!site || !local || !exec) {
-                alert("Por favor, preencha Site, Local e Colaborador.");
-                return;
+            if (!site || !local || !exec) {
+                alert("Erro: Preencha Site, Local e Colaborador."); return;
             }
 
             let msg = `*ATIVIDADE*\nPreventiva de Rack e Sala de Telecom\n\n`;
@@ -194,7 +208,7 @@
         function abrirModal() { document.getElementById('modalAdm').style.display = 'flex'; }
         function fecharModal() { document.getElementById('modalAdm').style.display = 'none'; }
 
-        // Inicialização
+        // Inicialização de Data, Hora e Listas
         (function() {
             const agora = new Date();
             document.getElementById('dataAtividade').value = agora.toISOString().split('T')[0];
